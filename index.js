@@ -1,29 +1,21 @@
-// 1. Es necesario importar el módulo nativo HTTP
-const http = require('http');
-
-// 2. Definición del servidor con tu enrutador
-const server = http.createServer((req, res) => {
-  const { url } = req;
-  console.log(`Petición recibida en la ruta: ${url}`);
-
-  // Configurar la cabecera por defecto para texto plano
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-
-  if (url === '/') {
-    res.end('Hello From Node.js');
-  } else if (url === '/contact') {
-    res.end('The Contact Page, hola ds');
-  } else if (url === '/about') {
-    res.end('The About Page');
-  } else {
-    // Es buena práctica enviar el código de estado explícito
-    res.writeHead(404);
-    res.end('Not Found');
-  }
+// index.js
+const express = require('express');
+const morgan = require('morgan');
+const app = express();
+app.use(morgan('dev'));
+app.get('/', (req, res) => {
+res.send('Hello From Node.js');
 });
-
-// 3. El servidor debe escuchar en un puerto específico para recibir peticiones
+app.get('/contact', (req, res) => {
+res.send('The Contact Page');
+});
+app.get('/about', (req, res) => {
+res.send('The About Page');
+});
+app.get('*', (req, res) => {
+res.status(404).send('Not Found');
+});
 const PORT = 3000;
-server.listen(PORT, () => {
-  console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+app.listen(PORT, () => {
+console.log(`Server running on http://localhost:${PORT}`);
 });
